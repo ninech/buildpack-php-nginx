@@ -47,14 +47,29 @@ the Nginx configuration file.
 
 | Variable | Default |
 | -------- | -------- |
-| `BP_PHP_NGINX_ENABLE_HTTPS`   | false    |
-| `BP_PHP_ENABLE_HTTPS_REDIRECT`   | true    |
-| `BP_PHP_WEB_DIR`    | htdocs    |
+| `BP_PHP_NGINX_ENABLE_HTTPS`        | false  |
+| `BP_PHP_ENABLE_HTTPS_REDIRECT`     | true   |
+| `BP_PHP_WEB_DIR`                   | htdocs |
+| `BP_PHP_DISABLE_PHP_ROOT_LOCATION` | false  |
 
 Note that for HTTPS workloads, setting `$BP_PHP_NGINX_ENABLE_HTTPS` sets all
 connections to work in SSL mode. You may still need to add a user-included
 config file to provide directives like `ssl_certificate`, `ssl_certificate_key`
 etc.
+
+#### Disabling the PHP root location
+Frameworks like Wordpress, Laravel or Symfony need a specific nginx location directive,
+which redirects all requested URIs to `index.php` if they don't exist on the
+filesystem. This specific directive is included by default:
+
+```
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+```
+
+If your application doesn't use one of those frameworks you can disable the
+directive by setting `BP_PHP_DISABLE_PHP_ROOT_LOCATION` to `true`. 
 
 ## Usage
 

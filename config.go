@@ -19,13 +19,14 @@ var NGINXConfTemplate string
 var NGINXFPMConfTemplate string
 
 type NginxConfig struct {
-	UserServerConf       string
-	UserHttpConf         string
-	EnableHTTPS          bool
-	DisableHTTPSRedirect bool
-	AppRoot              string
-	WebDirectory         string
-	FpmSocket            string
+	UserServerConf         string
+	UserHttpConf           string
+	EnableHTTPS            bool
+	DisableHTTPSRedirect   bool
+	DisablePHPRootLocation bool
+	AppRoot                string
+	WebDirectory           string
+	FpmSocket              string
 }
 
 type NginxFpmConfig struct {
@@ -117,6 +118,17 @@ func (c NginxConfigWriter) Write(workingDir string) (string, error) {
 	}
 	data.DisableHTTPSRedirect = !enableHTTPSRedirect
 	c.logger.Debug.Subprocess(fmt.Sprintf("Enable HTTPS redirect: %t", enableHTTPSRedirect))
+
+	disablePHPRootLocation := false
+	disablePHPRootLocationStr, ok := os.LookupEnv("BP_PHP_DISABLE_PHP_ROOT_LOCATION")
+	if ok {
+		disablePHPRootLocation, err = strconv.ParseBool(disablePHPRootLocationStr)
+		if err != nil {
+			return "", fmt.Errorf("failed to parse $BP_PHP_DISABLE_PHP_ROOT_LOCATION into boolean: %w", err)
+		}
+	}
+	data.DisablePHPRootLocation = disablePHPRootLocation
+	c.logger.Debug.Subprocess(fmt.Sprintf("Disabling PHP root location: %t", disablePHPRootLocation))
 
 	fpmSocket := "/tmp/php-fpm.socket"
 	data.FpmSocket = fpmSocket
