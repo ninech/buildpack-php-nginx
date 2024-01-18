@@ -2,8 +2,8 @@ api = "0.7"
 
 [buildpack]
   description = "A buildpack for configuring Nginx for PHP apps"
-  homepage = "https://github.com/paketo-buildpacks/php-nginx"
-  id = "paketo-buildpacks/php-nginx"
+  homepage = "https://github.com/ninech/buildpack-php-nginx"
+  id = "ninech/buildpack-php-nginx"
   keywords = ["php", "nginx"]
   name = "Paketo Buildpack for PHP Nginx"
 
