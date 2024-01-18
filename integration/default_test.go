@@ -81,6 +81,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 				"    Web directory: htdocs",
 				"    Enable NGINX HTTPS: false",
 				"    Enable HTTPS redirect: true",
+				"    Disabling PHP root location: false",
 				"    FPM socket: /tmp/php-fpm.socket",
 			))
 
@@ -112,6 +113,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).NotTo(HaveOccurred())
 
 			Eventually(container).Should(Serve(ContainSubstring("SUCCESS: date loads.")).OnPort(8080).WithEndpoint("/index.php?date"))
+			Eventually(container).Should(Serve(ContainSubstring("SUCCESS: date loads.")).OnPort(8080).WithEndpoint("/not-existent?date"))
 		})
 	})
 }
